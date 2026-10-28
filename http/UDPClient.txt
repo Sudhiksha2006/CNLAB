@@ -1,0 +1,31 @@
+
+import java.net.*;
+
+public class UDPClient {
+    public static void main(String[] args) throws Exception {
+        DatagramSocket client = new DatagramSocket();
+
+        InetAddress address = InetAddress.getByName("localhost");
+
+        String message = "GET / HTTP/1.1";
+        byte[] data = message.getBytes();
+
+        DatagramPacket request = new DatagramPacket(
+            data, data.length, address, 8080);
+
+        client.send(request);
+
+        byte[] buffer = new byte[1024];
+        DatagramPacket reply =
+            new DatagramPacket(buffer, buffer.length);
+
+        client.receive(reply);
+
+        String response = new String(
+            reply.getData(), 0, reply.getLength());
+
+        System.out.println(response);
+
+        client.close();
+    }
+}

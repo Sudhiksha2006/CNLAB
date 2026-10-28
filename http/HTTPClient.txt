@@ -1,0 +1,32 @@
+
+import java.net.*;
+import java.io.*;
+
+public class HTTPClient {
+    public static void main(String[] args) throws IOException {
+
+        Socket socket = new Socket("localhost", 8080);
+
+        PrintWriter out = new PrintWriter(
+            socket.getOutputStream());
+
+        BufferedReader in = new BufferedReader(
+            new InputStreamReader(socket.getInputStream()));
+
+        // Send an HTTP GET request
+        out.println("GET / HTTP/1.1");
+        out.println("Host: localhost:8080");
+        out.println("Connection: close");
+        out.println();
+
+        // Display the HTTP response
+        String line;
+        while ((line = in.readLine()) != null) {
+            System.out.println(line);
+        }
+
+        in.close();
+        out.close();
+        socket.close();
+    }
+}
