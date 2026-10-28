@@ -1,0 +1,45 @@
+import java.net.*;
+import java.io.*;
+import java.util.Scanner;
+
+public class UDPClient {
+    public static void main(String[] args) throws IOException {
+
+        DatagramSocket client = new DatagramSocket();
+
+        InetAddress address = InetAddress.getByName("localhost");
+
+        Scanner sc = new Scanner(System.in);
+
+        while (true) {
+            System.out.print("Enter message: ");
+            String message = sc.nextLine();
+
+            byte[] data = message.getBytes();
+
+            DatagramPacket request = new DatagramPacket(
+                data, data.length, address, 5000);
+
+            client.send(request);
+
+            byte[] buffer = new byte[1024];
+
+            DatagramPacket reply =
+                new DatagramPacket(buffer, buffer.length);
+
+            client.receive(reply);
+
+            String response = new String(
+                reply.getData(), 0, reply.getLength());
+
+            System.out.println("Server reply: " + response);
+
+            if (message.equalsIgnoreCase("bye")) {
+                break;
+            }
+        }
+
+        sc.close();
+        client.close();
+    }
+}
